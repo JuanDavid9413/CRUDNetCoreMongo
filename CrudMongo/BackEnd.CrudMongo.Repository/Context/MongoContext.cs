@@ -18,10 +18,10 @@ namespace BackEnd.CrudMongo.Repository.Context
     public class MongoContext<T> : IMongoContextRespository<T>
     {
         private readonly IMongoCollection<T> _collection;
-        private readonly MongoSettings _mongoSettings;
-        private T _value;
+        private readonly DatabaseConfiguration _mongoSettings;
+        private T _value = (T)Activator.CreateInstance(typeof(T));
 
-        public MongoContext(IOptions<MongoSettings> mongoSettings)
+        public MongoContext(IOptions<DatabaseConfiguration> mongoSettings)
         {
             _mongoSettings = mongoSettings.Value;
             MongoClient client = new MongoClient(_mongoSettings.ConnectionString);
@@ -58,7 +58,7 @@ namespace BackEnd.CrudMongo.Repository.Context
             string result = null;
             Type type = _value.GetType();
             if (type == typeof(Users))
-                result = MongoCollections.Users.GetEnumString();
+                result = _mongoSettings.UsersCollectionName;
 
             return result;
         }

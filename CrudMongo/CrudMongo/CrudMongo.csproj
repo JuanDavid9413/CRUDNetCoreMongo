@@ -15,7 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BackEnd.CrudMongo.Business\BackEnd.CrudMongo.Business.csproj" />
     <ProjectReference Include="..\BackEnd.CrudMongo.Entities\BackEnd.CrudMongo.Entities.csproj" />
+    <ProjectReference Include="..\BackEnd.CrudMongo.Repository\BackEnd.CrudMongo.Repository.csproj" />
   </ItemGroup>
 
 </Project>

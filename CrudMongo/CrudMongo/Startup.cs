@@ -1,3 +1,6 @@
+using BackEnd.CrudMongo.Business;
+using BackEnd.CrudMongo.Entities.DbSet;
+using BackEnd.CrudMongo.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,7 +29,9 @@ namespace CrudMongo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.Configure<DatabaseConfiguration>(Configuration.GetSection("DatabaseConfiguration"));
+            services.AddRepositories();
+            services.AddBusiness();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

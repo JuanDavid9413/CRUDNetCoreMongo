@@ -9,6 +9,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BackEnd.CrudMongo.Entities\BackEnd.CrudMongo.Entities.csproj" />
     <ProjectReference Include="..\BackEnd.CrudMongo.Utilities\BackEnd.CrudMongo.Utilities.csproj" />
   </ItemGroup>

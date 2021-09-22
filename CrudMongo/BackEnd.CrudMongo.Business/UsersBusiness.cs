@@ -84,7 +84,7 @@ namespace BackEnd.CrudMongo.Business
                 else
                 {
                     response.Code = (int)HttpStatusCode.BadRequest;
-                    response.Message = "No actualizo los registros";
+                    response.Message = "No encontro los registros";
                 }
             }
             catch (Exception ex)
