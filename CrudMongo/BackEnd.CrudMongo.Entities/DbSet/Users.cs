@@ -9,10 +9,13 @@ using System.Threading.Tasks;
 
 namespace BackEnd.CrudMongo.Entities.DbSet
 {
-    public class Users : IIdentity<ObjectId>
+    [BsonIgnoreExtraElements]
+    public class Users
     {
         [BsonId]
-        public ObjectId Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
+        //public string Id { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
         public string Age { get; set; }

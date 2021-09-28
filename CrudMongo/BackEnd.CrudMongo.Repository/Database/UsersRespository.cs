@@ -1,6 +1,7 @@
 ﻿using BackEnd.CrudMongo.Entities.Conection;
 using BackEnd.CrudMongo.Entities.DbSet;
 using BackEnd.CrudMongo.Entities.Enums;
+using BackEnd.CrudMongo.Entities.Interfaces.Repository;
 using BackEnd.CrudMongo.Entities.Models;
 using BackEnd.CrudMongo.Utilities;
 using Microsoft.Extensions.Options;
@@ -17,52 +18,50 @@ using System.Threading.Tasks;
 
 namespace BackEnd.CrudMongo.Repository.Context
 {
-    public class MongoContext<T> : IMongoContextRespository<T> where T: GenericId
+    public class UsersRepository: IUsersRepository
     {
-        private readonly IMongoCollection<T> _collection;
+        private readonly IMongoCollection<Users> _collection;
         private readonly DatabaseConfiguration _mongoSettings;
-        private T _value = (T)Activator.CreateInstance(typeof(T));
 
-        public MongoContext(IOptions<DatabaseConfiguration> mongoSettings)
+        public UsersRepository(IOptions<DatabaseConfiguration> mongoSettings)
         {
             _mongoSettings = mongoSettings.Value;
             MongoClient client = new MongoClient(_mongoSettings.ConnectionString);
             IMongoDatabase database = client.GetDatabase(_mongoSettings.DatabaseName);
-            _collection = database.GetCollection<T>(_GetCollection());
+            _collection = database.GetCollection<Users>(_mongoSettings.UsersCollectionName);
 
         }
 
         /*Generic Methods*/
-        public async Task<List<T>> GetAllAsync() => await _collection.Find(l => true).ToListAsync();
+        public async Task<List<Users>> GetAllAsync() => await _collection.Find(l => true).ToListAsync();
 
-        public async Task<T> CreateAsync(T currentCollection)
+        public async Task<Users> CreateAsync(Users currentCollection)
         {
             await _collection.InsertOneAsync(currentCollection);
             return currentCollection;
         }
 
-        public async Task<T> UpdateAsync(string id, T currentCollection)
-        {
-            var filter = Builders<T>.Filter.Eq("id", id);
-            var result = await _collection.FindOneAndReplaceAsync(filter, currentCollection);
+        public async Task<Users> UpdateAsync(string id, Users currentCollection)
+        {            
+            var result = await _collection.FindOneAndReplaceAsync(l => l.Id == id, currentCollection);
             return currentCollection;
         }
 
         public async Task<bool> DeleteAsync(string id)
         {
-            var result = await _collection.DeleteOneAsync(l => l.id == id);
+            var result = await _collection.DeleteOneAsync(l => l.Id == id);
             return true;
 
         }
 
-        private string _GetCollection()
-        {
-            string result = null;
-            Type type = _value.GetType();
-            if (type == typeof(Users))
-                result = _mongoSettings.UsersCollectionName;
+        //private string _GetCollection()
+        //{
+        //    string result = null;
+        //    Type type = _value.GetType();
+        //    if (type == typeof(Users))
+        //        result = _mongoSettings.UsersCollectionName;
 
-            return result;
-        }
+        //    return result;
+        //}
     }
 }
