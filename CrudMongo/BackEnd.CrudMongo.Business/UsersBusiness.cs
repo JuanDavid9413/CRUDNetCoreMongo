@@ -1,5 +1,6 @@
 ﻿using BackEnd.CrudMongo.Entities.DbSet;
 using BackEnd.CrudMongo.Entities.Interfaces.Business;
+using BackEnd.CrudMongo.Entities.Interfaces.Repository;
 using BackEnd.CrudMongo.Entities.Response;
 using BackEnd.CrudMongo.Repository.Context;
 using BackEnd.CrudMongo.Utilities;
@@ -14,10 +15,10 @@ namespace BackEnd.CrudMongo.Business
 {
     public class UsersBusiness : IUsersBusiness
     {
-        private readonly IMongoContextRespository<Users> _respository;
-        public UsersBusiness(IMongoContextRespository<Users> respository)
+        private readonly IUsersRepository _repository;  //IMongoContextRespository<Users> _respository;
+        public UsersBusiness(IUsersRepository repository/*IMongoContextRespository<Users> respository*/)
         {
-            _respository = respository;
+            _repository = repository;
         }
 
         public async Task<ResponseBase<Users>> CreateUsers(Users users)
@@ -25,7 +26,7 @@ namespace BackEnd.CrudMongo.Business
             ResponseBase<Users> response = new ResponseBase<Users>();
             try
             {
-                response.Data = await _respository.CreateAsync(users).ConfigureAwait(true);
+                response.Data = await _repository.CreateAsync(users).ConfigureAwait(true);
                 if (response.Data != null)
                 {
                     response.Code = (int)HttpStatusCode.OK;
@@ -50,7 +51,7 @@ namespace BackEnd.CrudMongo.Business
             ResponseBase<bool> response = new ResponseBase<bool>();
             try
             {
-                response.Data = await _respository.DeleteAsync(id).ConfigureAwait(true);
+                response.Data = await _repository.DeleteAsync(id).ConfigureAwait(true);
                 if (response.Data)
                 {
                     response.Code = (int)HttpStatusCode.OK;
@@ -75,7 +76,7 @@ namespace BackEnd.CrudMongo.Business
             ResponseBase<List<Users>> response = new ResponseBase<List<Users>>();
             try
             {
-                response.Data = await _respository.GetAllAsync().ConfigureAwait(true);
+                response.Data = await _repository.GetAllAsync().ConfigureAwait(true);
                 if (response.Data.Count > 0)
                 {
                     response.Code = (int)HttpStatusCode.OK;
@@ -100,7 +101,7 @@ namespace BackEnd.CrudMongo.Business
             ResponseBase<Users> response = new ResponseBase<Users>();
             try
             {
-                response.Data = await _respository.UpdateAsync(users.Id.ToString(), users).ConfigureAwait(true);
+                response.Data = await _repository.UpdateAsync(users.Id.ToString(), users).ConfigureAwait(true);
                 if (response.Data != null)
                 {
                     response.Code = (int)HttpStatusCode.OK;
